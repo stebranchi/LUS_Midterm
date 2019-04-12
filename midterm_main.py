@@ -92,7 +92,28 @@ probs = dict()
 for key, value in wtag_counter.items():
 	words = key.split()
 	tag = words[1]
-	prob = float(value/tags_counter[tag])
-	probs_out.write(str(words[0]) + '\t' + str(words[1]) + '\t' + str(prob) + '\n')
+	if words[0] in s:
+		prob = float(value/tags_counter[tag])
+		probs_out.write(str(words[0]) + '\t' + str(words[1]) + '\t' + str(prob) + '\n')
 
 probs_out.close()
+
+f = open('wtags.probs','r')
+out = open('probs_fst.txt', 'w')
+
+for l in f:
+	words = l.split()
+	out.write('0\t0\t' + str(words[0]) + '\t' + str(words[1]) + '\t' + str(-math.log(float(words[2]))) + '\n')
+out.write('0')
+
+f.close()
+out.close()
+
+out = open('unk.txt', 'w')
+
+prob = -math.log(1/41)
+
+for key, value in tags_counter.items():
+	out.write('0\t0\t<unk>\t' + key + '\t' + str(prob) + '\n')
+out.write('0')
+out.close()
